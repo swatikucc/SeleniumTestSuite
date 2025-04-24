@@ -6,15 +6,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 public class AppTest {
 
     private WebDriver driver;
 
-    @BeforeClass
+    @BeforeMethod
     public void setup() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
@@ -62,7 +60,19 @@ public class AppTest {
         Assert.assertTrue(errorMessage.getText().contains("Your username is invalid!"), "Error message content mismatch.");
     }
 
-    @AfterClass
+
+    @Test(priority = 3)
+    public void validclickcheckboxTest() {
+        driver.get("https://the-internet.herokuapp.com/checkboxes");
+        //clickcheckbox
+        WebElement checkbox = driver.findElement(By.xpath("//*[@id=\"checkboxes\"]/input[1]"));
+        checkbox.click();
+        // Assert that the checkbox is checked (selected)
+        Assert.assertTrue(checkbox.isSelected(), "Checkbox is not checked!");
+    }
+
+
+    @AfterMethod
     public void tearDown() {
         if (driver != null) {
             driver.quit();
