@@ -5,15 +5,38 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class AppTest {
 
     private WebDriver driver;
 
     @BeforeMethod
-    public void setup() {
+    public void setup() throws IOException {
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        // Add a unique user data directory to avoid conflicts
+
+
+        // Create a guaranteed unique directory
+        Path userDataDir = Files.createTempDirectory("chrome-profile");
+        System.out.println("Using temp user-data-dir: " + userDataDir.toAbsolutePath());
+
+        options.addArguments("--user-data-dir=" + userDataDir.toAbsolutePath());
+
+        // These flags are important in CI
+        options.addArguments("--headless=new");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+
+        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
     }
 
