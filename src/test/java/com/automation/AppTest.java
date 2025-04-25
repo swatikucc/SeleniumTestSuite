@@ -1,9 +1,7 @@
 package com.automation;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -71,11 +69,34 @@ public class AppTest {
         Assert.assertTrue(checkbox.isSelected(), "Checkbox is not checked!");
     }
 
+    @Test(priority = 4)
+    public void validAddElementTest() {
+        driver.get("https://the-internet.herokuapp.com");
+        //addelement
+        WebElement addElement = driver.findElement(By.xpath("//*[@id=\"content\"]/ul/li[2]/a"));
+        addElement.click();
+        WebElement addItem  = driver.findElement(By.xpath("//*[@id=\"content\"]/div/button"));
+        addItem.click();
+        WebElement  deleteItem  = driver.findElement(By.xpath("//*[@id=\"elements\"]/button"));
+        Assert.assertTrue(deleteItem.isDisplayed(), "DeleteItem is not displayed!");
+        deleteItem.click();
+        //Assert.assertFalse(deleteItem.isDisplayed(), "DeleteItem is displayed!");
+        try {
+            driver.findElement(By.xpath("//*[@id=\"elements\"]/button"));
+            Assert.fail("Element was expected to be removed, but it was found!");
+        } catch (NoSuchElementException e) {
+            // Element is not found, hence it's removed from the DOM
+            Assert.assertTrue(true, "Element is removed from the DOM");
+        }
+
+    }
 
     @AfterMethod
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+    public void tearDown () {
+            if (driver != null) {
+                driver.quit();
+            }
     }
+
 }
+
