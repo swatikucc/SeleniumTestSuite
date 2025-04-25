@@ -102,16 +102,19 @@ public class AppTest {
         addItem.click();
         WebElement  deleteItem  = driver.findElement(By.xpath("//*[@id=\"elements\"]/button"));
         Assert.assertTrue(deleteItem.isDisplayed(), "DeleteItem is not displayed!");
-        deleteItem.click();
-        //Assert.assertFalse(deleteItem.isDisplayed(), "DeleteItem is displayed!");
-        try {
-            driver.findElement(By.xpath("//*[@id=\"elements\"]/button"));
-            Assert.fail("Element was expected to be removed, but it was found!");
-        } catch (NoSuchElementException e) {
-            // Element is not found, hence it's removed from the DOM
-            Assert.assertTrue(true, "Element is removed from the DOM");
-        }
+    }
 
+    @Test(expectedExceptions = { NoSuchElementException.class })
+    public void validDeleteTest() {
+        driver.get("https://the-internet.herokuapp.com");
+        WebElement addElement = driver.findElement(By.xpath("//*[@id=\"content\"]/ul/li[2]/a"));
+        addElement.click();
+        WebElement addItem  = driver.findElement(By.xpath("//*[@id=\"content\"]/div/button"));
+        addItem.click();
+        WebElement  deleteItem  = driver.findElement(By.xpath("//*[@id=\"elements\"]/button"));
+        Assert.assertTrue(deleteItem.isDisplayed(), "DeleteItem is not displayed!");
+        deleteItem.click();
+        driver.findElement(By.xpath("//*[@id=\"elements\"]/button"));
     }
 
     @AfterMethod
