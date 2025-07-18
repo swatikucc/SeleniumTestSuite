@@ -8,11 +8,12 @@ import org.testng.annotations.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.chrome.ChromeOptions;import org.testng.asserts.SoftAssert;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 
 public class AppTest {
 
@@ -24,7 +25,7 @@ public class AppTest {
         ChromeOptions options = new ChromeOptions();
         // Add a unique user data directory to avoid conflicts
 
-
+/*
         // Create a guaranteed unique directory
         Path userDataDir = Files.createTempDirectory("chrome-profile");
         System.out.println("Using temp user-data-dir: " + userDataDir.toAbsolutePath());
@@ -35,9 +36,10 @@ public class AppTest {
         options.addArguments("--headless=new");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
-
+*/
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
+        //driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
     }
 
     // Test valid login
@@ -61,7 +63,7 @@ public class AppTest {
     }
 
     // Test invalid login
-    @Test(priority = 2)
+    @Test(priority = 2, dependsOnMethods = "validclickcheckboxTest")
     public void invalidLoginTest() {
         driver.get("https://the-internet.herokuapp.com/login");
 
@@ -102,6 +104,25 @@ public class AppTest {
         addItem.click();
         WebElement  deleteItem  = driver.findElement(By.xpath("//*[@id=\"elements\"]/button"));
         Assert.assertTrue(deleteItem.isDisplayed(), "DeleteItem is not displayed!");
+
+    }
+
+
+
+    @Test(priority = 4)
+    public void validAddElementSoftTest() {
+        driver.get("https://the-internet.herokuapp.com");
+        //addelement
+        WebElement addElement = driver.findElement(By.xpath("//*[@id=\"content\"]/ul/li[2]/a"));
+        addElement.click();
+        WebElement addItem  = driver.findElement(By.xpath("//*[@id=\"content\"]/div/button"));
+        addItem.click();
+        WebElement  deleteItem  = driver.findElement(By.xpath("//*[@id=\"elements\"]/button"));
+
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertFalse(deleteItem.isDisplayed(),"DeleteItem is not displayed" );
+        softAssert.assertFalse(deleteItem.isDisplayed(),"second DeleteItem is not displayed" );
+        softAssert.assertAll();
     }
 
     @Test(expectedExceptions = { NoSuchElementException.class })
