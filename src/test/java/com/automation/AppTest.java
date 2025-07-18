@@ -1,6 +1,7 @@
 package com.automation;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.maven.surefire.api.runorder.PrioritizedTest;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
@@ -120,10 +121,12 @@ public class AppTest {
         WebElement  deleteItem  = driver.findElement(By.xpath("//*[@id=\"elements\"]/button"));
 
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertFalse(deleteItem.isDisplayed(),"DeleteItem is not displayed" );
-        softAssert.assertFalse(deleteItem.isDisplayed(),"second DeleteItem is not displayed" );
+        softAssert.assertTrue(deleteItem.isDisplayed(),"DeleteItem is not displayed" );
+        softAssert.assertTrue(deleteItem.isDisplayed(),"second DeleteItem is not displayed" );
         softAssert.assertAll();
     }
+
+
 
     @Test(expectedExceptions = { NoSuchElementException.class })
     public void validDeleteTest() {
@@ -137,6 +140,7 @@ public class AppTest {
         deleteItem.click();
         driver.findElement(By.xpath("//*[@id=\"elements\"]/button"));
     }
+
 
     @AfterMethod
     public void tearDown () {
